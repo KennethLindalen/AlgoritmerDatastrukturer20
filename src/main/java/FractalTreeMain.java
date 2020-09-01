@@ -35,15 +35,15 @@ public class FractalTreeMain{
         optionsPanel.add(treeGenerationsInput, gridBagConstraints);
 
 
-        JButton vinkelOffset = new JButton();
-        vinkelOffset.setText("Tilfeldige vinkler");
-        vinkelOffset.setPreferredSize(new Dimension(150,30));
+        JButton tilfeldigVinkelKnapp = new JButton();
+        tilfeldigVinkelKnapp.setText("Tilfeldige Vinkler");
+        tilfeldigVinkelKnapp.setPreferredSize(new Dimension(150,30));
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        optionsPanel.add(vinkelOffset, gridBagConstraints);
+        optionsPanel.add(tilfeldigVinkelKnapp, gridBagConstraints);
 
         JButton genererTreKnapp = new JButton();
-        genererTreKnapp.setText("Generer tre");
+        genererTreKnapp.setText("Generer Tre");
         genererTreKnapp.setPreferredSize(new Dimension(150,30));
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
