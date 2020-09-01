@@ -1,11 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import static javax.swing.JFrame.EXIT_ON_CLOSE;
-
-public class FractalTreeTest extends JPanel {
+public class FractalTreeMain extends JPanel {
 
 
     public static void main(String[] args) {
@@ -21,7 +17,7 @@ public class FractalTreeTest extends JPanel {
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
         final JPanel treePanel = new JPanel();
-        treePanel.add(new FractalTreee(11, false));
+        treePanel.add(new FractalTree(11, false));
 
         final JPanel optionsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
@@ -62,12 +58,12 @@ public class FractalTreeTest extends JPanel {
     }
 }
 
-class FractalTreee extends JPanel {
+class FractalTree extends JPanel {
 
     private int dybde;
     private boolean tilfeldig;
 
-    public FractalTreee(int dybde, boolean tilfeldig) {
+    public FractalTree(int dybde, boolean tilfeldig) {
         this.dybde = dybde;
         this.tilfeldig = tilfeldig;
     }
@@ -76,10 +72,12 @@ class FractalTreee extends JPanel {
 
         int vinkel = 20;
 
-        if (dybde == 0) return;
+        if (dybde == 0) {
+            return;
+        }
 
         if (tilfeldig) {
-            vinkel = (int) (Math.random() * 100);
+            vinkel = 15 + (int)(Math.random() * ((25 - 15) + 1));
         }
 
         int x2 = x1 + (int) (Math.cos(Math.toRadians(grunnVinkel)) * dybde * 8.0);
