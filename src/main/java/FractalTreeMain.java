@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class FractalTreeMain extends JPanel {
+public class FractalTreeMain{
 
 
     public static void main(String[] args) {
