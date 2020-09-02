@@ -7,7 +7,7 @@ class FractalTree extends JPanel {
 
     private int dybde;
     private boolean tilfeldig;
-    JLabel melding = new JLabel("", JLabel.CENTER);
+    private JLabel melding = new JLabel();
 
     public FractalTree(int dybde, boolean tilfeldig) {
         this.dybde = dybde;
@@ -31,7 +31,7 @@ class FractalTree extends JPanel {
         }
 
         if (tilfeldig) {
-            vinkel = 15 + (int) (Math.random() * ((25 - 15) + 1));
+            vinkel = 15 + (int) (Math.random() * ((35 - 15) + 1));
         }
         g.drawLine(x1, y1, x2, y2);
         tegnTreet(g, x2, y2, grunnVinkel - vinkel, dybde - 1, tilfeldig);

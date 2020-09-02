@@ -26,7 +26,7 @@ public class FractalTreeMain {
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
         final JPanel treePanel = new JPanel();
-        treePanel.add(new FractalTree(11, false));
+        treePanel.add(new FractalTree(9, false));
 
         final JPanel optionsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
@@ -40,12 +40,12 @@ public class FractalTreeMain {
         final int[] generasjonAntall = new int[1];
         final boolean[] tilfeldigBool = {false};
 
-        final JSlider treeGenerationsInput = new JSlider(JSlider.HORIZONTAL, 1, 6, 1);
-        treeGenerationsInput.addChangeListener(new ChangeListener() {
+        final JSlider treGenerasjonSlider = new JSlider(JSlider.HORIZONTAL, 1, 6, 1);
+        treGenerasjonSlider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                generasjonAntall[0] = treeGenerationsInput.getValue() == 1 ? treeGenerationsInput.getValue()
-                        : treeGenerationsInput.getValue() + 2;
+                generasjonAntall[0] = treGenerasjonSlider.getValue() == 1 ? treGenerasjonSlider.getValue()
+                        : treGenerasjonSlider.getValue() + 2;
                 treePanel.removeAll();
                 treePanel.add(new FractalTree(generasjonAntall[0], tilfeldigBool[0]));
                 treePanel.revalidate();
@@ -54,7 +54,7 @@ public class FractalTreeMain {
         });
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        optionsPanel.add(treeGenerationsInput, gridBagConstraints);
+        optionsPanel.add(treGenerasjonSlider, gridBagConstraints);
 
 
         JButton tilfeldigVinkelKnapp = new JButton();
