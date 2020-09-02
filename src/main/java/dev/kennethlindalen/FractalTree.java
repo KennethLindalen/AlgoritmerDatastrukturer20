@@ -67,7 +67,7 @@ class FractalTree extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.BLACK);
-        tegnTreet(g, 300, 375, -90, this.dybde, this.tilfeldig, 8, stammeLengde, true);
+        tegnTreet(g, 300, 375, -90, this.dybde, this.tilfeldig, 10, stammeLengde, true);
         add(melding);
     }
 
