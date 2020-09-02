@@ -22,6 +22,7 @@ class FractalTree extends JPanel {
             return;
         }
 
+        // Disse blir castet til int fordi Math.cos og Math.sin returnerer double
         int x2 = x1 + (int) (Math.cos(Math.toRadians(grunnVinkel)) * dybde * 8);
         int y2 = y1 + (int) (Math.sin(Math.toRadians(grunnVinkel)) * dybde * 8);
 
@@ -38,8 +39,8 @@ class FractalTree extends JPanel {
         g2.setStroke(new BasicStroke(fontTykkelse));
         g2.drawLine(x1, y1, x2, y2);
 
-        tegnTreet(g, x2, y2, grunnVinkel - vinkel, dybde - 1, tilfeldig, fontTykkelse -1);
-        tegnTreet(g, x2, y2, grunnVinkel + vinkel, dybde - 1, tilfeldig,fontTykkelse -1);
+        tegnTreet(g, x2, y2, grunnVinkel - vinkel, dybde - 1, tilfeldig, fontTykkelse - 1);
+        tegnTreet(g, x2, y2, grunnVinkel + vinkel, dybde - 1, tilfeldig, fontTykkelse - 1);
     }
 
     public Dimension getPreferredSize() {
