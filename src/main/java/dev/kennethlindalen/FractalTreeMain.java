@@ -1,15 +1,21 @@
 package dev.kennethlindalen;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class FractalTreeMain{
+public class FractalTreeMain {
+
 
     public static void main(String[] args) {
         lagGUI();
     }
 
     public static void lagGUI() {
+
         JFrame frame = new JFrame();
         frame.setTitle("Fraktal tre");
         frame.setSize(600, 800);
@@ -31,8 +37,21 @@ public class FractalTreeMain{
         gridBagConstraints.gridy = 0;
         optionsPanel.add(treeGenerations, gridBagConstraints);
 
-        final JTextField treeGenerationsInput = new JTextField();
-        treeGenerationsInput.setPreferredSize(new Dimension(150,25));
+        final int[] generasjonAntall = new int[1];
+        final boolean[] tilfeldigBool = {false};
+
+        final JSlider treeGenerationsInput = new JSlider(JSlider.HORIZONTAL, 1, 6, 1);
+        treeGenerationsInput.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                generasjonAntall[0] = treeGenerationsInput.getValue() == 1 ? treeGenerationsInput.getValue()
+                        : treeGenerationsInput.getValue() + 2;
+                treePanel.removeAll();
+                treePanel.add(new FractalTree(generasjonAntall[0], tilfeldigBool[0]));
+                treePanel.revalidate();
+
+            }
+        });
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         optionsPanel.add(treeGenerationsInput, gridBagConstraints);
@@ -40,18 +59,18 @@ public class FractalTreeMain{
 
         JButton tilfeldigVinkelKnapp = new JButton();
         tilfeldigVinkelKnapp.setText("Tilfeldige Vinkler");
-        tilfeldigVinkelKnapp.setPreferredSize(new Dimension(150,30));
+        tilfeldigVinkelKnapp.setPreferredSize(new Dimension(150, 30));
+        tilfeldigVinkelKnapp.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                tilfeldigBool[0] = !tilfeldigBool[0];
+                treePanel.removeAll();
+                treePanel.add(new FractalTree(generasjonAntall[0], tilfeldigBool[0]));
+                treePanel.revalidate();
+            }
+        });
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         optionsPanel.add(tilfeldigVinkelKnapp, gridBagConstraints);
-
-        JButton genererTreKnapp = new JButton();
-        genererTreKnapp.setText("Generer Tre");
-        genererTreKnapp.setPreferredSize(new Dimension(150,30));
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-
-        optionsPanel.add(genererTreKnapp, gridBagConstraints);
 
         mainPanel.add(treePanel);
         mainPanel.add(optionsPanel);
