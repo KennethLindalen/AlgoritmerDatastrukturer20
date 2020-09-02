@@ -39,12 +39,13 @@ class FractalTree extends JPanel {
             vinkel = 15 + (int) (Math.random() * ((35 - 15) + 1));
         }
 
+
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(fontTykkelse));
         g2.drawLine(x1, y1, x2, y2);
 
-        g.drawString("Grener: ", 50, tilfeldig ? 370 : 350);
-        g.drawString(String.valueOf(this.dybde), 100, tilfeldig ? 370 : 350);
+        g.drawString("Grener generasjoner: ", 50, tilfeldig ? 370 : 350);
+        g.drawString(String.valueOf(this.dybde), 185, tilfeldig ? 370 : 350);
         g.drawString(tilfeldig ? "" : "Vinkel:", 50, 370);
         g.drawString(tilfeldig ? "" : String.valueOf(vinkel), 95, 370);
         g.drawString("Stamme lengde: ", 50, 390);
