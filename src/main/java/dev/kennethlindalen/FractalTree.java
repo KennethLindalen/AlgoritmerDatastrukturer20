@@ -14,7 +14,7 @@ class FractalTree extends JPanel {
         this.tilfeldig = tilfeldig;
     }
 
-    private void tegnTreet(Graphics g, int x1, int y1, double grunnVinkel, int dybde, boolean tilfeldig) {
+    private void tegnTreet(Graphics g, int x1, int y1, double grunnVinkel, int dybde, boolean tilfeldig, int fontTykkelse) {
 
         int vinkel = 20;
 
@@ -33,9 +33,13 @@ class FractalTree extends JPanel {
         if (tilfeldig) {
             vinkel = 15 + (int) (Math.random() * ((35 - 15) + 1));
         }
-        g.drawLine(x1, y1, x2, y2);
-        tegnTreet(g, x2, y2, grunnVinkel - vinkel, dybde - 1, tilfeldig);
-        tegnTreet(g, x2, y2, grunnVinkel + vinkel, dybde - 1, tilfeldig);
+
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(fontTykkelse));
+        g2.drawLine(x1, y1, x2, y2);
+
+        tegnTreet(g, x2, y2, grunnVinkel - vinkel, dybde - 1, tilfeldig, fontTykkelse -1);
+        tegnTreet(g, x2, y2, grunnVinkel + vinkel, dybde - 1, tilfeldig,fontTykkelse -1);
     }
 
     public Dimension getPreferredSize() {
@@ -46,7 +50,7 @@ class FractalTree extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.BLACK);
-        tegnTreet(g, 300, 550, -90, this.dybde, this.tilfeldig);
+        tegnTreet(g, 300, 375, -90, this.dybde, this.tilfeldig, 8);
         add(melding);
     }
 

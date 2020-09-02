@@ -40,12 +40,11 @@ public class FractalTreeMain {
         final int[] generasjonAntall = new int[1];
         final boolean[] tilfeldigBool = {false};
 
-        final JSlider treGenerasjonSlider = new JSlider(JSlider.HORIZONTAL, 1, 6, 1);
+        final JSlider treGenerasjonSlider = new JSlider(JSlider.HORIZONTAL, 1, 8, 1);
         treGenerasjonSlider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                generasjonAntall[0] = treGenerasjonSlider.getValue() == 1 ? treGenerasjonSlider.getValue()
-                        : treGenerasjonSlider.getValue() + 2;
+                generasjonAntall[0] = treGenerasjonSlider.getValue();
                 treePanel.removeAll();
                 treePanel.add(new FractalTree(generasjonAntall[0], tilfeldigBool[0]));
                 treePanel.revalidate();
@@ -75,6 +74,7 @@ public class FractalTreeMain {
         mainPanel.add(treePanel);
         mainPanel.add(optionsPanel);
         frame.add(mainPanel);
+        frame.pack();
 
         frame.setVisible(true);
     }
