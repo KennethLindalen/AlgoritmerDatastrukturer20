@@ -7,6 +7,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Denne klassen inneholder GUI komponentene som har blitt brukt
+ */
+
 public class FractalTreeMain {
 
 
@@ -14,6 +18,10 @@ public class FractalTreeMain {
         lagGUI();
     }
 
+    /**
+     * Denne metoden lager GUI for vår oppgave. Vi har brukt GridBagLayout for å lettere legge til constraints
+     * og posisjon til disse. Vanlig GridLayout passet ikke helt med vår løsning
+     */
     public static void lagGUI() {
 
         final int[] generasjonAntall = new int[1];
