@@ -36,7 +36,7 @@ class FractalTree extends JPanel {
      * @param x1                Denne variabelen blir brukt rekursivt til å tegne de forskjellige greinene.
      *                          Start posisjon x for tegning av stamme/gren.
      * @param y1                Denne variabelen blir brukt rekursivt til å tegne de forskjellige greinene.
-     *                          Start posisjon x for tegning av stamme/gren.
+     *                          Start posisjon y for tegning av stamme/gren.
      * @param grunnVinkel       Start posisjon for greinene som kommer etter stammen.
      * @param dybde             Hvor mange ledd greinene til treet skal ha.
      * @param tilfeldig         Forteller om grenene skal ha tilfeldig vinkel under generering.
