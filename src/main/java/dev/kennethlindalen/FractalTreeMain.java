@@ -9,6 +9,9 @@ import java.awt.event.ActionListener;
 
 /**
  * Denne klassen inneholder GUI komponentene som har blitt brukt
+ *
+ * @author Kenneth Lindalen (161940)
+ * @author Lars Stian Fagerlid (163357)
  */
 
 public class FractalTreeMain {
@@ -19,8 +22,8 @@ public class FractalTreeMain {
     }
 
     /**
-     * Denne metoden lager GUI for vår oppgave. Vi har brukt GridBagLayout for å lettere legge til constraints
-     * og posisjon til disse. Vanlig GridLayout passet ikke helt med vår løsning
+     * Denne metoden lager GUI for vår oppgave. Vi valgte GridBagLayout slik at vi hadde mulighet for posisjonering av elemeneter ut
+     * i fra et enklere grid system.
      */
     public static void lagGUI() {
 

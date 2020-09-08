@@ -19,8 +19,8 @@ class FractalTree extends JPanel {
      *
      * @param dybde        hvor mange ledd greinene til treet skal ha.
      * @param tilfeldig    Variabel som gjør treet tilfeldig.
-     * @param vinkel       Vinkel på treet når det blir tegnet.
-     * @param stammeLengde Lengden på stammen og greinene.
+     * @param vinkel       Base vinkel på treet når det blir tegnet.
+     * @param stammeLengde Grunn lengde på stamme som gir basis på lengde på grener.
      */
     public FractalTree(int dybde, boolean tilfeldig, int vinkel, int stammeLengde) {
         this.dybde = dybde;
@@ -32,21 +32,21 @@ class FractalTree extends JPanel {
     /**
      * Denne metoden er den som inneholder koden for å kunne tegne treet og greinene ved bruk av et Rekursivt kall.
      *
-     * @param g                 parameteret g er selve malekosten når treet blir tegnet
+     * @param g                 parameteret g er selve "lerettet" når treet blir tegnet på.
      * @param x1                Denne variabelen blir brukt rekursivt til å tegne de forskjellige greinene.
-     *                          Den returnerer vinkelen for x-koordinatet for greinene.
+     *                          Start posisjon x for tegning av stamme/gren.
      * @param y1                Denne variabelen blir brukt rekursivt til å tegne de forskjellige greinene.
-     *                          den returnerer vinkelen for y-koordinatet for greinene.
+     *                          Start posisjon x for tegning av stamme/gren.
      * @param grunnVinkel       Start posisjon for greinene som kommer etter stammen.
-     * @param dybde             Hvor mange ledd greinene til treet skal har.
-     * @param tilfeldig         Variabel som gjør treet tilfeldig.
-     * @param fontTykkelse      Tykkelse på "malekosten" når treet blir tegnet.
-     * @param stammeLengde      Lengden på stammen og greinene.
-     * @param skrivStammelengde Variabelen sitt innhold fremvist tekstlig i GUI.
+     * @param dybde             Hvor mange ledd greinene til treet skal ha.
+     * @param tilfeldig         Forteller om grenene skal ha tilfeldig vinkel under generering.
+     * @param strekTykkelse     Tykkelse på strek(gren/stamme) for hvert ledd av generering av tre.
+     * @param stammeLengde      Grunn lengde på stamme som gir basis på lengde på grener.
+     * @param skrivStammelengde Gir beskjed om lengde skal bli printet tekstlig på skjerm.
+     *                          Overlapper all teksten hvis ikke denne er her.
      */
     private void tegnTreet(Graphics g, int x1, int y1, double grunnVinkel, int dybde,
-                           boolean tilfeldig, int fontTykkelse, int stammeLengde, boolean skrivStammelengde) {
-
+                           boolean tilfeldig, int strekTykkelse, int stammeLengde, boolean skrivStammelengde) {
 
         if (dybde == 0) {
             return;
@@ -69,7 +69,7 @@ class FractalTree extends JPanel {
 
 
         Graphics2D g2 = (Graphics2D) g;
-        g2.setStroke(new BasicStroke(fontTykkelse));
+        g2.setStroke(new BasicStroke(strekTykkelse));
         g2.drawLine(x1, y1, x2, y2);
 
         g.drawString("Grener generasjoner: ", 50, tilfeldig ? 370 : 350);
@@ -82,24 +82,23 @@ class FractalTree extends JPanel {
         g.drawString(tilfeldig ? "Ja" : "Nei", 150, 410);
 
         tegnTreet(g, x2, y2, grunnVinkel - vinkel, dybde - 1, tilfeldig,
-                fontTykkelse - 1, (int) (stammeLengde * 0.9), false);
+                strekTykkelse - 1, (int) (stammeLengde * 0.9), false);
         tegnTreet(g, x2, y2, grunnVinkel + vinkel, dybde - 1, tilfeldig,
-                fontTykkelse - 1, (int) (stammeLengde * 0.9), false);
+                strekTykkelse - 1, (int) (stammeLengde * 0.9), false);
     }
 
     /**
-     * @return returnerer ønskelig bredde og høyde til treet. Sørger for at treet er innenfor GUI-et.
+     * @return returnerer ønskelig bredde og høyde til canvas(lerret).
      */
     public Dimension getPreferredSize() {
         return new Dimension(600, 500);
     }
 
     /**
-     * Denne metoden tegner treet, og gjør det igjen når en bruker gjør en handling som krever at det blir
-     * tegnet på nytt. f.eks tilfeldig knappen i GUI.
-     * Vi har brukt @Override her ettersom vi ønsker at den skal gjøre det bruker ber om
+     * Oppretter komponenten til treet, dette er for første generering av treet og opprettelse av komponenten og første henting av
+     * graphics fra Super(JPanel)
      *
-     * @param g Variabel som blir brukt som malekost.
+     * @param g henter canvas(lerret) fra Super(JPanel)
      */
     @Override
     public void paintComponent(Graphics g) {
