@@ -4,28 +4,32 @@ import static dev.kennethlindalen.avltree.AVLscene.infoTA;
 import static dev.kennethlindalen.avltree.AVLscene.log;
 
 public class AVLTree<T extends Comparable<T>> {
-    private Node<T> origin;
+    private Node<T> toppRot;
 
-    public Node<T> getOrigin() {
-        return origin;
+    public Node<T> getToppRot() {
+        return toppRot;
     }
 
-    public void setOrigin(Node<T> origin) {
-        this.origin = origin;
+    public void setToppRot(Node<T> toppRot) {
+        this.toppRot = toppRot;
     }
 
     //we create the root ot the origin
-    public void insertElement(T element) throws DuplicateException{
-        if (search(element))
-            throw new DuplicateException("Number is already in the tree");
-        else
-            origin = insertElement(element, origin);
+    public void settInnElement(T element){
+        if (sok(element)) {
+            log = (String.format("%sNummeret er allerede i treet%n", log));
+            infoTA.setText(log);
+            infoTA.setScrollTop(Double.MAX_VALUE);
+        }
+        else {
+            toppRot = settInnElement(element, toppRot);
+        }
     }
 
     //search if the element is in the tree
-    public boolean search(T element) {
+    public boolean sok(T element) {
 
-        Node<T> temp = origin; // Start from the root
+        Node<T> temp = toppRot; // Start from the root
 
         while (temp != null) {
             if (element.compareTo(temp.getElement()) < 0)
@@ -40,51 +44,57 @@ public class AVLTree<T extends Comparable<T>> {
     }
 
     //insert a new element to the tree
-    private Node<T> insertElement(T element, Node<T> origin) {
-        if (origin == null)
-            origin = new Node<T>(element);
+    private Node<T> settInnElement(T element, Node<T> toppRot) {
+        if (toppRot == null)
+            toppRot = new Node<T>(element);
         else {
-            if (element.compareTo(origin.getElement()) > 0) {
-                log = (String.format("%sSatt inn ny node på høyre side av %s%n", log,origin.getElement()));
+            if (element.compareTo(toppRot.getElement()) > 0) {
+                log = (String.format("%sSatt inn ny node på høyre side av %s%n", log,toppRot.getElement()));
                 infoTA.setText(log);
-                origin.setRight(insertElement(element, origin.getRight()));
+                infoTA.setScrollTop(Double.MAX_VALUE);
+                toppRot.setRight(settInnElement(element, toppRot.getRight()));
                 //it is checked that it is balanced
-                if (height(origin.getLeft()) - height(origin.getRight()) == -2) {
-                    if (element.compareTo(origin.getRight().getElement()) > 0) {
-                        log = (String.format("%sVenstre rotasjon på: %s%n", log, origin.getElement()));
+                if (hoyde(toppRot.getLeft()) - hoyde(toppRot.getRight()) == -2) {
+                    if (element.compareTo(toppRot.getRight().getElement()) > 0) {
+                        log = (String.format("%sVenstre rotasjon på: %s%n", log, toppRot.getElement()));
                         infoTA.setText(log);
-                        origin = roterTilVenstre(origin);
+                        infoTA.setScrollTop(Double.MAX_VALUE);
+                        toppRot = roterTilVenstre(toppRot);
                     } else {
-                        log = (String.format("%sDobbel venstre rotasjon på: %s%n", log, origin.getElement()));
+                        log = (String.format("%sDobbel venstre rotasjon på: %s%n", log, toppRot.getElement()));
                         infoTA.setText(log);
-                        origin = dobbelRoterTilVenstre(origin);
+                        infoTA.setScrollTop(Double.MAX_VALUE);
+                        toppRot = dobbelRoterTilVenstre(toppRot);
 
                     }
                 }
             }
-            if (element.compareTo(origin.getElement()) < 0) {
-                log = (String.format("%sSatt inn ny node på venstre side av %s%n", log,origin.getElement()));
+            if (element.compareTo(toppRot.getElement()) < 0) {
+                log = (String.format("%sSatt inn ny node på venstre side av %s%n", log,toppRot.getElement()));
                 infoTA.setText(log);
-                origin.setLeft(insertElement(element, origin.getLeft()));
+                infoTA.setScrollTop(Double.MAX_VALUE);
+                toppRot.setLeft(settInnElement(element, toppRot.getLeft()));
                 //it is checked that it is balanced
-                if (height(origin.getLeft()) - height(origin.getRight()) == 2) {
-                    if (element.compareTo(origin.getLeft().getElement()) < 0) {
-                        log = (String.format("%sHøyre rotasjon på: %s%n", log, origin.getElement()));
+                if (hoyde(toppRot.getLeft()) - hoyde(toppRot.getRight()) == 2) {
+                    if (element.compareTo(toppRot.getLeft().getElement()) < 0) {
+                        log = (String.format("%sHøyre rotasjon på: %s%n", log, toppRot.getElement()));
                         infoTA.setText(log);
-                        origin = roterTilHoyre(origin);
+                        infoTA.setScrollTop(Double.MAX_VALUE);
+                        toppRot = roterTilHoyre(toppRot);
                     } else {
-                        log = (String.format("%sHøyre rotasjon på: %s%n", log, origin.getElement()));
+                        log = (String.format("%sHøyre rotasjon på: %s%n", log, toppRot.getElement()));
                         infoTA.setText(log);
-                        origin = dobbelRoterTilHoyre(origin);
+                        infoTA.setScrollTop(Double.MAX_VALUE);
+                        toppRot = dobbelRoterTilHoyre(toppRot);
 
                     }
                 }
             }
         }
 
-        int height = maxHeight(height(origin.getLeft()), height(origin.getRight()));
-        origin.setHeight(height + 1);
-        return origin;
+        int height = maksHoydeMellomVenstreOgHoyre(hoyde(toppRot.getLeft()), hoyde(toppRot.getRight()));
+        toppRot.setHeight(height + 1);
+        return toppRot;
     }
 
     //simple rotation to the left
@@ -92,8 +102,8 @@ public class AVLTree<T extends Comparable<T>> {
         Node<T> temp = origin.getRight();
         origin.setRight(temp.getLeft());
         temp.setLeft(origin);
-        origin.setHeight(maxHeight(height(origin.getLeft()), height(origin.getRight())) + 1);
-        temp.setHeight(maxHeight(height(temp.getRight()), height(origin)) + 1);
+        origin.setHeight(maksHoydeMellomVenstreOgHoyre(hoyde(origin.getLeft()), hoyde(origin.getRight())) + 1);
+        temp.setHeight(maksHoydeMellomVenstreOgHoyre(hoyde(temp.getRight()), hoyde(origin)) + 1);
         return temp;
     }
 
@@ -102,8 +112,8 @@ public class AVLTree<T extends Comparable<T>> {
         Node<T> temp = origin.getLeft();
         origin.setLeft(temp.getRight());
         temp.setRight(origin);
-        origin.setHeight(maxHeight(height(origin.getLeft()), height(origin.getRight())) + 1);
-        temp.setHeight(maxHeight(height(temp.getLeft()), height(origin)) + 1);
+        origin.setHeight(maksHoydeMellomVenstreOgHoyre(hoyde(origin.getLeft()), hoyde(origin.getRight())) + 1);
+        temp.setHeight(maksHoydeMellomVenstreOgHoyre(hoyde(temp.getLeft()), hoyde(origin)) + 1);
         return temp;
     }
 
@@ -118,9 +128,7 @@ public class AVLTree<T extends Comparable<T>> {
         origin.setLeft(roterTilVenstre(origin.getLeft()));
         return roterTilHoyre(origin);
     }
-
-    //get the maximum height between left and right
-    private int maxHeight(int a, int b) {
+    private int maksHoydeMellomVenstreOgHoyre(int a, int b) {
         if (a > b)
             return a;
         else
@@ -128,14 +136,14 @@ public class AVLTree<T extends Comparable<T>> {
     }
 
     //get the specific height of a node
-    private int height(Node<T> node) {
+    private int hoyde(Node<T> node) {
         if (node == null)
             return -1;
         else
             return node.getHeight();
     }
 
-    private Node<T> findMin(Node<T> node) {
+    private Node<T> finnMinste(Node<T> node) {
         if (node == null)
             return node;
 
@@ -144,29 +152,29 @@ public class AVLTree<T extends Comparable<T>> {
         return node;
     }
 
-    public void deleteNode(T element) {
-        deleteNode(origin, element);
+    public void slettNode(T element) {
+        slettNode(toppRot, element);
     }
 
-    private Node<T> deleteNode(Node<T> node, T element) {
+    private Node<T> slettNode(Node<T> node, T element) {
         if (node == null) {
             return node;
         }
         if (element.compareTo(node.getElement()) < 0) {
-            node.setLeft(deleteNode(node.getLeft(), element));
+            node.setLeft(slettNode(node.getLeft(), element));
         } else if (element.compareTo(node.getElement()) > 0) {
-            node.setRight(deleteNode(node.getRight(), element));
+            node.setRight(slettNode(node.getRight(), element));
         } else if (node.getLeft() != null && node.getRight() != null) {
-            node.setElement(findMin(node.getRight()).getElement());
-            node.setRight(deleteNode(node.getRight(), node.getElement()));
+            node.setElement(finnMinste(node.getRight()).getElement());
+            node.setRight(slettNode(node.getRight(), node.getElement()));
         } else if (node.getLeft() != null || node.getRight() != null) {
             if (node.getRight() == null) {
-                node.setElement(findMin(node.getLeft()).getElement());
-                node.setRight(deleteNode(node.getLeft(), node.getElement()));
+                node.setElement(finnMinste(node.getLeft()).getElement());
+                node.setRight(slettNode(node.getLeft(), node.getElement()));
                 node.setLeft(null);
             } else {
-                node.setElement(findMin(node.getRight()).getElement());
-                node.setRight(deleteNode(node.getRight(), node.getElement()));
+                node.setElement(finnMinste(node.getRight()).getElement());
+                node.setRight(slettNode(node.getRight(), node.getElement()));
                 node.setRight(null);
             }
         } else {
@@ -175,87 +183,87 @@ public class AVLTree<T extends Comparable<T>> {
         return node;
     }
 
-    public void deleteNode2(T x) {
-        deleteNode2(origin, x);
+    public void slettNode2(T x) {
+        slettNode2(toppRot, x);
     }
 
-    private Node<T> deleteNode2(Node<T> a, T x) {
+    private Node<T> slettNode2(Node<T> a, T x) {
         if (a == null) {
             return a;
         }
         if (a.getElement().compareTo(x) == 0) {
-            return deleteOrigin(a);
+            return slettHovedRot(a);
         }
         if (a.getElement().compareTo(x) > 0) {
-            a.setLeft(deleteNode2(a.getLeft(), x));
+            a.setLeft(slettNode2(a.getLeft(), x));
         } else {
-            a.setRight(deleteNode2(a.getRight(), x));
+            a.setRight(slettNode2(a.getRight(), x));
         }
-        return balance(a);
+        return balanser(a);
     }
 
-    private Node<T> deleteOrigin(Node<T> a) {
-        if (a.getLeft() == null)
-            return a.getRight();
-        if (a.getRight() == null)
-            return a.getLeft();
+    private Node<T> slettHovedRot(Node<T> currentRoot) {
+        if (currentRoot.getLeft() == null)
+            return currentRoot.getRight();
+        if (currentRoot.getRight() == null)
+            return currentRoot.getLeft();
 
-        Node<T> r1 = a.getLeft();
-        Node<T> father = a;
+        Node<T> r1 = currentRoot.getLeft();
+        Node<T> father = currentRoot;
 
         while (r1.getRight() != null) {
             father = r1;
             r1 = r1.getRight();
         }
-        a.setElement(r1.getElement());
-        if (father == a)
+        currentRoot.setElement(r1.getElement());
+        if (father == currentRoot)
             father.setLeft(r1.getLeft());
         else
             father.setRight(r1.getLeft());
-        return a;
+        return currentRoot;
     }
 
-    private Node<T> balance(Node<T> a) {
-        calculateHeight(a);
-        if (heightTree(a.getLeft()) - heightTree(a.getRight()) == 2) {
-            if (heightTree(a.getLeft().getLeft()) < heightTree(a.getLeft().getRight()))
-                a.setLeft(rotation1(a.getLeft()));
-            return rotation2(a);
+    private Node<T> balanser(Node<T> a) {
+        kalkulerHoyde(a);
+        if (hoydeAvTreet(a.getLeft()) - hoydeAvTreet(a.getRight()) == 2) {
+            if (hoydeAvTreet(a.getLeft().getLeft()) < hoydeAvTreet(a.getLeft().getRight()))
+                a.setLeft(rotasjon1(a.getLeft()));
+            return rotasjon2(a);
         } // else
-        if (heightTree(a.getLeft()) - heightTree(a.getRight()) == -2) {
-            if (heightTree(a.getRight().getRight()) < heightTree(a.getRight().getLeft()))
-                a.setRight(rotation2(a.getRight()));
-            return rotation1(a);
+        if (hoydeAvTreet(a.getLeft()) - hoydeAvTreet(a.getRight()) == -2) {
+            if (hoydeAvTreet(a.getRight().getRight()) < hoydeAvTreet(a.getRight().getLeft()))
+                a.setRight(rotasjon2(a.getRight()));
+            return rotasjon1(a);
         }
         return a;
     }
 
-    private Node<T> rotation1(Node<T> a) {
-        Node<T> b = a.getRight();
-        Node<T> c = new Node<>(a.getElement(), a.getLeft(), b.getLeft());
+    private Node<T> rotasjon1(Node<T> current) {
+        Node<T> b = current.getRight();
+        Node<T> c = new Node<>(current.getElement(), current.getLeft(), b.getLeft());
         Node<T> r = new Node<>(b.getElement(), c, b.getRight());
         return r;
     }
 
-    private Node<T> rotation2(Node<T> a) {
-        Node<T> c = a.getLeft();
-        Node<T> b = new Node<>(a.getElement(), c.getRight(), a.getRight());
+    private Node<T> rotasjon2(Node<T> current) {
+        Node<T> c = current.getLeft();
+        Node<T> b = new Node<>(current.getElement(), c.getRight(), current.getRight());
         Node<T> r = new Node<>(c.getElement(), c.getLeft(), b);
         return r;
     }
 
-    private void calculateHeight(Node<T> nodeC) {
+    private void kalkulerHoyde(Node<T> nodeC) {
         if (nodeC != null) {
-            calculateHeight(nodeC.getLeft());
-            calculateHeight(nodeC.getRight());
-            nodeC.setHeight(1 + Math.max(heightTree(nodeC.getLeft()), heightTree(nodeC.getRight())));
+            kalkulerHoyde(nodeC.getLeft());
+            kalkulerHoyde(nodeC.getRight());
+            nodeC.setHeight(1 + Math.max(hoydeAvTreet(nodeC.getLeft()), hoydeAvTreet(nodeC.getRight())));
         }
     }
 
-    public int heightTree(Node<T> a) {
+    public int hoydeAvTreet(Node<T> a) {
         if (a == null) {
             return -1;
         }
-        return 1 + Math.max(heightTree(a.getLeft()), heightTree(a.getRight()));
+        return 1 + Math.max(hoydeAvTreet(a.getLeft()), hoydeAvTreet(a.getRight()));
     }
 }

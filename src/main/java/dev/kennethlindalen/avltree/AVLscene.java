@@ -85,12 +85,14 @@ public class AVLscene extends Scene {
             randomTree();
             log = (String.format("%sGenerert et tilfeldig tre%n", log));
             infoTA.setText(log);
+            infoTA.setScrollTop(Double.MAX_VALUE);
         });
         clear.setOnAction(e -> {
             avl.getChildren().clear();
-            arbol.setOrigin(null);
+            arbol.setToppRot(null);
             log = (String.format("%sSlettet alle noder%n", log));
             infoTA.setText(log);
+            infoTA.setScrollTop(Double.MAX_VALUE);
         });
         insert.setOnAction(e -> {
             insert();
@@ -98,12 +100,14 @@ public class AVLscene extends Scene {
         finnNteLavesteNode.setOnAction(e -> {
             if(Integer.parseInt(finnNodeTF.getText()) > nodeListe.size() - 1){
                 nodeListe.clear();
-                printInorder(arbol.getOrigin());
+                printInorder(arbol.getToppRot());
                 log = (String.format("%sLaveste node på %d posisjon er: %d%n", log,Integer.parseInt(finnNodeTF.getText()),nodeListe.get(Integer.parseInt(finnNodeTF.getText())-1)));
                 infoTA.setText(log);
+                infoTA.setScrollTop(Double.MAX_VALUE);
             }else{
                 log = (String.format("%sIkke gylding index, ikke mange nok noder%n", log));
                 infoTA.setText(log);
+                infoTA.setScrollTop(Double.MAX_VALUE);
             }
         });
         randomTree.setOnAction(e -> {
@@ -112,13 +116,14 @@ public class AVLscene extends Scene {
         delete.setOnAction(e -> {
             delete();
         });
+
     }
 
     public void displayAVLTree() {
         avl.getChildren().clear(); // Clear the pane
-        if (arbol.getOrigin() != null) {
+        if (arbol.getToppRot() != null) {
             // Display tree recursively
-            displayAVLTree(arbol.getOrigin(), avl.getWidth() / 2, vGap, avl.getWidth() / 4);
+            displayAVLTree(arbol.getToppRot(), avl.getWidth() / 2, vGap, avl.getWidth() / 4);
         }
     }
 
@@ -158,7 +163,7 @@ public class AVLscene extends Scene {
 
     private void randomTree(){
         avl.getChildren().clear();
-        arbol.setOrigin(null);
+        arbol.setToppRot(null);
         Random randNum = new Random();
         //random array size from 3 to 15
         int setSize = (randNum.nextInt(15)+3);
@@ -169,7 +174,7 @@ public class AVLscene extends Scene {
         }
         try{
             for(int x: set){
-                arbol.insertElement(x);
+                arbol.settInnElement(x);
             }
         } catch(DuplicateException de) {
         }
@@ -181,7 +186,7 @@ public class AVLscene extends Scene {
         try{
             int toInsert = Integer.parseInt(input.getText());
             try{
-                arbol.insertElement(toInsert);
+                arbol.settInnElement(toInsert);
                 displayAVLTree();
             }catch(DuplicateException de){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -199,10 +204,10 @@ public class AVLscene extends Scene {
     }
 
     private void delete(){
-        if(input.getText().equals(arbol.getOrigin().getElement())){
-            arbol.deleteNode(Integer.parseInt(input.getText()));
+        if(input.getText().equals(arbol.getToppRot().getElement())){
+            arbol.slettNode(Integer.parseInt(input.getText()));
         } else {
-            arbol.deleteNode2(Integer.parseInt(input.getText()));
+            arbol.slettNode2(Integer.parseInt(input.getText()));
         }
         displayAVLTree();
         input.setText("");
