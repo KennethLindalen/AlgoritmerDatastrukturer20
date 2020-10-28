@@ -22,7 +22,6 @@ import java.util.Set;
  * Oppretter gui og setter opp for hva som skal skje ut i fra hvilke handlinger som er gjort i GUI
  *
  * @author Kenneth Lindalen (161940)
- * @author Lars Stian Fagerlid (163357)
  */
 
 public class AVLscene extends Scene {
