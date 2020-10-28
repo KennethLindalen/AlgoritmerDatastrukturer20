@@ -1,7 +1,5 @@
 package dev.kennethlindalen.avltree;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -160,7 +158,7 @@ public class AVLscene extends Scene {
         circle.setId("circle");
         circle.setStroke(Color.GRAY);
         circle.setStrokeWidth(1);
-        circle.setFill(Color.rgb(255,255,255));
+        circle.setFill(Color.rgb(255, 255, 255));
         avlPane.getChildren().addAll(circle, new Text(x - 7, y + 4, root.getVerdi() + ""));
     }
 
@@ -179,18 +177,18 @@ public class AVLscene extends Scene {
     public static void tilLogger(String melding) {
         log = (String.format("%s%s%n", log, melding));
         infoTA.setText(log);
-        infoTA.setScrollTop(Double.MAX_VALUE);
+        // Scroll til bun av logger (Ja, forholdsvis "hacky" måte..)
+        infoTA.selectPositionCaret(infoTA.getLength());
+        infoTA.deselect();
     }
 
     private void tilfeldigTre() {
         avlPane.getChildren().clear();
         avlTre.setRotNode(null);
         Random rnd = new Random();
-        //Tilfeldig antall størrelse på LinkedHashSet mellom 3 og 20
-        int setSize = (rnd.nextInt(20) + 3);
-        //Genererer via HashSet for å bare få unike nummer
-        Set<Integer> set = new LinkedHashSet<Integer>();
-        while (set.size() < setSize) {
+        //Genererer 10 noder ved bruk av HashSet for å bare få unike nummer
+        Set<Integer> set = new LinkedHashSet<>();
+        while (set.size() < 10) {
             set.add(rnd.nextInt(100) + 3);
         }
         for (int x : set) {
@@ -199,11 +197,11 @@ public class AVLscene extends Scene {
         visAVLTre();
     }
 
+    // Sett inn ny node(tall) i treet
     private void settInn() {
         try {
             int skalSettesInn = Integer.parseInt(input.getText());
             avlTre.settInnElement(skalSettesInn);
-
             visAVLTre();
         } catch (Exception empty) {
             tilLogger("Kan ikke sette inn tomt element.");
@@ -211,6 +209,7 @@ public class AVLscene extends Scene {
         input.setText("");
     }
 
+    //Slett node(tall) fra treet
     private void slett() {
         if (input.getText().equals(avlTre.getRotNode().getVerdi())) {
             avlTre.slettNode(Integer.parseInt(input.getText()));

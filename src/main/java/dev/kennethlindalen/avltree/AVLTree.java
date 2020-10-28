@@ -50,10 +50,10 @@ public class AVLTree<T extends Comparable<T>> {
                 //Sjekker om treet er balansert
                 if (hoyde(toppRot.getVenstre()) - hoyde(toppRot.getHoyre()) == -2) {
                     if (element.compareTo(toppRot.getHoyre().getVerdi()) > 0) {
-                        tilLogger("Venstre rotasjon på: " +  toppRot.getVerdi());
+                        tilLogger("Venstre rotasjon på: " + toppRot.getVerdi());
                         toppRot = roterTilVenstre(toppRot);
                     } else {
-                        tilLogger("Dobbel venstre rotasjon på: " +  toppRot.getVerdi());
+                        tilLogger("Dobbel venstre rotasjon på: " + toppRot.getVerdi());
                         toppRot = dobbelRoterTilVenstre(toppRot);
                     }
                 }
@@ -63,10 +63,10 @@ public class AVLTree<T extends Comparable<T>> {
                 //Sjekker om treet er balansert
                 if (hoyde(toppRot.getVenstre()) - hoyde(toppRot.getHoyre()) == 2) {
                     if (element.compareTo(toppRot.getVenstre().getVerdi()) < 0) {
-                        tilLogger("Hoyre rotasjon på: " +  toppRot.getVerdi());
+                        tilLogger("Hoyre rotasjon på: " + toppRot.getVerdi());
                         toppRot = roterTilHoyre(toppRot);
                     } else {
-                        tilLogger("Dobbel høyre rotasjon på: " +  toppRot.getVerdi());
+                        tilLogger("Dobbel høyre rotasjon på: " + toppRot.getVerdi());
                         toppRot = dobbelRoterTilHoyre(toppRot);
                     }
                 }
