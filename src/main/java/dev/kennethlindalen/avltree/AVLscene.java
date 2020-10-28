@@ -1,5 +1,7 @@
 package dev.kennethlindalen.avltree;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -24,6 +26,8 @@ import java.util.Set;
  * @author Kenneth Lindalen (161940)
  * @author Lars Stian Fagerlid (163357)
  */
+
+// TODO: impl søk i GUI
 public class AVLscene extends Scene {
     private TextField input;
     private TextField finnNodeTF;
@@ -39,7 +43,7 @@ public class AVLscene extends Scene {
         super(new VBox());
 
         VBox vindu = new VBox(0);
-        FlowPane bottom = new FlowPane();
+        FlowPane bunn = new FlowPane();
 
         avlPane = new Pane();
         input = new TextField();
@@ -47,11 +51,12 @@ public class AVLscene extends Scene {
 
 
         // Elementer i GUI
-        Label lblinput = new Label("Element:");
+        Label generellInputLabel = new Label("Søk/Slett/Sett inn Element:");
         Label finnNode = new Label("Nte laveste node å finne:");
         Button finnNteLavesteNode = new Button("Finn den nte laveste node:");
         Button settInnKnapp = new Button("Sett inn node");
         Button slettKnapp = new Button("Slett node");
+        Button sokKnapp = new Button("Søk node");
         Button tilfeldigTreKnapp = new Button("Generer tilfeldig tre");
         Button slettAlleNoderKnapp = new Button("Slett alle noder");
 
@@ -59,83 +64,80 @@ public class AVLscene extends Scene {
 
         avlPane.setMinSize(800, 450);
         avlPane.setPadding(new Insets(20, 20, 20, 20));
-        avlPane.setStyle("-fx-padding: 30;" +
-                "-fx-background-color: white;");
+        avlPane.setStyle("-fx-background-color: white;");
 
         infoTA.setEditable(false);
-        bottom.setHgap(15);
-        bottom.setVgap(15);
-        bottom.setAlignment(Pos.BOTTOM_LEFT);
 
-        bottom.setPadding(new Insets(10, 10, 10, 15));
+        bunn.setHgap(15);
+        bunn.setVgap(15);
+        bunn.setAlignment(Pos.BOTTOM_CENTER);
 
-        bottom.getChildren().addAll(lblinput, input, finnNode, finnNodeTF, finnNteLavesteNode, settInnKnapp, slettKnapp, slettAlleNoderKnapp, tilfeldigTreKnapp, infoTA);
-        vindu.getChildren().addAll(avlPane, bottom);
+        bunn.setPadding(new Insets(10, 10, 10, 10));
+
+        bunn.getChildren().addAll(generellInputLabel, input, finnNode, finnNodeTF,
+                finnNteLavesteNode, settInnKnapp, slettKnapp, slettAlleNoderKnapp,
+                sokKnapp, tilfeldigTreKnapp, infoTA);
+
+        vindu.getChildren().addAll(avlPane, bunn);
 
 
         super.setRoot(vindu);
 
         tilfeldigTreKnapp.setOnAction(e -> {
             tilfeldigTre();
-            log = (String.format("%sGenerert et tilfeldig tre%n", log));
-            infoTA.setText(log);
-            infoTA.setScrollTop(Double.MAX_VALUE);
+            tilLogger("Generert et tilfeldig tre");
         });
 
         slettAlleNoderKnapp.setOnAction(e -> {
             avlPane.getChildren().clear();
             avlTre.setRotNode(null);
-            log = (String.format("%sSlettet alle noder%n", log));
-            infoTA.setText(log);
-            infoTA.setScrollTop(Double.MAX_VALUE);
+            tilLogger("Slettet alle noder");
+
         });
 
         settInnKnapp.setOnAction(e -> {
+            tilLogger("Setter inn: " + input.getText());
             settInn();
+        });
+
+        sokKnapp.setOnAction(e -> {
+            if (avlTre.sok(Integer.parseInt(input.getText()))) {
+                tilLogger(input.getText() + " er i treet.");
+            } else {
+                tilLogger(input.getText() + " er ikke i treet.");
+            }
         });
 
         finnNteLavesteNode.setOnAction(e -> {
             nodeListe.clear();
-            if (finnNodeTF.getText().equals("")){
-                log = (String.format("%sSøkefeltet er tomt%n", log));
-                infoTA.setText(log);
-                infoTA.setScrollTop(Double.MAX_VALUE);
+            if (finnNodeTF.getText().equals("")) {
+                tilLogger("Søkefeltet er tomt");
             } else if (Integer.parseInt(finnNodeTF.getText()) > nodeListe.size() - 1) {
                 printInorder(avlTre.getRotNode());
                 if (Integer.parseInt(finnNodeTF.getText()) < nodeListe.size() - 1) {
-                    log = (String.format("%sLaveste node på %d posisjon er: %d%n", log, Integer.parseInt(finnNodeTF.getText()), nodeListe.get(Integer.parseInt(finnNodeTF.getText()) - 1)));
-                    infoTA.setText(log);
-                    infoTA.setScrollTop(Double.MAX_VALUE);
-                }else {
-                    log = (String.format("%sIkke gylding index, ikke mange nok noder%n", log));
-                    infoTA.setText(log);
-                    infoTA.setScrollTop(Double.MAX_VALUE);
+                    tilLogger("Laveste node på " + Integer.parseInt(finnNodeTF.getText()) + " posisjon er: " + nodeListe.get(Integer.parseInt(finnNodeTF.getText()) - 1));
+                } else {
+                    tilLogger("Ikke gylding index, ikke mange nok noder.");
                 }
             }
         });
 
-        tilfeldigTreKnapp.setOnAction(e -> {
-            tilfeldigTre();
-            log = (String.format("%sGenerert et tilfeldig tre%n", log));
-            infoTA.setText(log);
-            infoTA.setScrollTop(Double.MAX_VALUE);
-        });
-
         slettKnapp.setOnAction(e -> {
-            if (input.getText().equals("")){
-                log = (String.format("%sSøkefeltet er tomt%n", log));
-                infoTA.setText(log);
-                infoTA.setScrollTop(Double.MAX_VALUE);
-            }else {
+            if (input.getText().equals("")) {
+                tilLogger("Søkefeltet er tomt.");
+            } else {
                 slett();
+                tilLogger(input.getText() + " har blitt slettet.");
             }
         });
+
     }
 
     public void visAVLTre() {
-        avlPane.getChildren().clear(); // Sletter alt som allerede er vist slik at ikke mange iterasjoner ligger oppå hverandre
+        // Sletter alt som allerede er vist slik at ikke mange iterasjoner ligger oppå hverandre
+        avlPane.getChildren().clear();
         if (avlTre.getRotNode() != null) {
-            // Gå gjennom treet og vis det ut i fra rekursjon
+            // Gå gjennom treet og viser det på skjermen ut i fra rekursjon
             visAVLTre(avlTre.getRotNode(), avlPane.getWidth() / 2, vGap, avlPane.getWidth() / 4);
         }
     }
@@ -159,11 +161,11 @@ public class AVLscene extends Scene {
         circle.setId("circle");
         circle.setStroke(Color.GRAY);
         circle.setStrokeWidth(1);
-        circle.setFill(Color.rgb(89, 162, 217));
+        circle.setFill(Color.rgb(255,255,255));
         avlPane.getChildren().addAll(circle, new Text(x - 7, y + 4, root.getVerdi() + ""));
     }
 
-    public void printInorder(Node node) {
+    private void printInorder(Node node) {
         if (node == null)
             return;
         // Gå så langt til venstre som det er mulig, kan den ikke mer så legger den verdien i nodeListe
@@ -173,6 +175,12 @@ public class AVLscene extends Scene {
         // Gjør deretter det samme på høyre noder.
         printInorder(node.getHoyre());
 
+    }
+
+    public static void tilLogger(String melding) {
+        log = (String.format("%s%s%n", log, melding));
+        infoTA.setText(log);
+        infoTA.setScrollTop(Double.MAX_VALUE);
     }
 
     private void tilfeldigTre() {
@@ -189,20 +197,17 @@ public class AVLscene extends Scene {
         for (int x : set) {
             avlTre.settInnElement(x);
         }
-        infoTA.setScrollTop(Double.MAX_VALUE);
         visAVLTre();
-
     }
 
     private void settInn() {
         try {
-            int toInsert = Integer.parseInt(input.getText());
-            avlTre.settInnElement(toInsert);
+            int skalSettesInn = Integer.parseInt(input.getText());
+            avlTre.settInnElement(skalSettesInn);
+
             visAVLTre();
         } catch (Exception empty) {
-            log = (String.format("%sKan ikke sette inn tomt element%n", log));
-            infoTA.setText(log);
-            infoTA.setScrollTop(Double.MAX_VALUE);
+            tilLogger("Kan ikke sette inn tomt element.");
         }
         input.setText("");
     }
@@ -210,14 +215,10 @@ public class AVLscene extends Scene {
     private void slett() {
         if (input.getText().equals(avlTre.getRotNode().getVerdi())) {
             avlTre.slettNode(Integer.parseInt(input.getText()));
-            log = (String.format("%sSlettet node: %s%n", log, input.getText()));
-            infoTA.setText(log);
-            infoTA.setScrollTop(Double.MAX_VALUE);
+            tilLogger("Slettet node: " + input.getText());
         } else {
             avlTre.slettNode2(Integer.parseInt(input.getText()));
-            log = (String.format("%sSlettet node: %s%n", log, input.getText()));
-            infoTA.setText(log);
-            infoTA.setScrollTop(Double.MAX_VALUE);
+            tilLogger("Slettet node: " + input.getText());
         }
         visAVLTre();
         input.setText("");

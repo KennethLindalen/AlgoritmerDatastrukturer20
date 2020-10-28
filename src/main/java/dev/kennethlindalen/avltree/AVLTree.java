@@ -1,7 +1,6 @@
 package dev.kennethlindalen.avltree;
 
-import static dev.kennethlindalen.avltree.AVLscene.infoTA;
-import static dev.kennethlindalen.avltree.AVLscene.log;
+import static dev.kennethlindalen.avltree.AVLscene.*;
 
 public class AVLTree<T extends Comparable<T>> {
     private Node<T> rotNode;
@@ -14,22 +13,19 @@ public class AVLTree<T extends Comparable<T>> {
         this.rotNode = rotNode;
     }
 
-    //we create the root ot the origin
+    //Hvis element ikke blir funnet blir det satt inn
     public void settInnElement(T element) {
         if (sok(element)) {
-            log = (String.format("%sNummeret er allerede i treet%n", log));
-            infoTA.setText(log);
+            tilLogger("Nummeret er allerede i treet");
         } else {
             rotNode = settInnElement(element, rotNode);
-
         }
-        infoTA.setScrollTop(Double.MAX_VALUE);
     }
 
-    //search if the element is in the tree
+    //Søke etter element i treet
     public boolean sok(T element) {
 
-        Node<T> temp = rotNode; // Start from the root
+        Node<T> temp = rotNode; // Start
 
         while (temp != null) {
             if (element.compareTo(temp.getVerdi()) < 0) {
@@ -50,50 +46,33 @@ public class AVLTree<T extends Comparable<T>> {
             toppRot = new Node<T>(element);
         } else {
             if (element.compareTo(toppRot.getVerdi()) > 0) {
-                log = (String.format("%sSatt inn ny node på høyre side av %s%n", log, toppRot.getVerdi()));
-                infoTA.setText(log);
-                infoTA.setScrollTop(Double.MAX_VALUE);
                 toppRot.setHoyre(settInnElement(element, toppRot.getHoyre()));
-                //it is checked that it is balanced
+                //Sjekker om treet er balansert
                 if (hoyde(toppRot.getVenstre()) - hoyde(toppRot.getHoyre()) == -2) {
                     if (element.compareTo(toppRot.getHoyre().getVerdi()) > 0) {
-                        log = (String.format("%sVenstre rotasjon på: %s%n", log, toppRot.getVerdi()));
-                        infoTA.setText(log);
-                        infoTA.setScrollTop(Double.MAX_VALUE);
+                        tilLogger("Venstre rotasjon på: " +  toppRot.getVerdi());
                         toppRot = roterTilVenstre(toppRot);
                     } else {
-                        log = (String.format("%sDobbel venstre rotasjon på: %s%n", log, toppRot.getVerdi()));
-                        infoTA.setText(log);
-                        infoTA.setScrollTop(Double.MAX_VALUE);
+                        tilLogger("Dobbel venstre rotasjon på: " +  toppRot.getVerdi());
                         toppRot = dobbelRoterTilVenstre(toppRot);
-
                     }
                 }
             }
             if (element.compareTo(toppRot.getVerdi()) < 0) {
-                log = (String.format("%sSatt inn ny node på venstre side av %s%n", log, toppRot.getVerdi()));
-                infoTA.setText(log);
-                infoTA.setScrollTop(Double.MAX_VALUE);
                 toppRot.setVenstre(settInnElement(element, toppRot.getVenstre()));
-                //it is checked that it is balanced
+                //Sjekker om treet er balansert
                 if (hoyde(toppRot.getVenstre()) - hoyde(toppRot.getHoyre()) == 2) {
                     if (element.compareTo(toppRot.getVenstre().getVerdi()) < 0) {
-                        log = (String.format("%sHøyre rotasjon på: %s%n", log, toppRot.getVerdi()));
-                        infoTA.setText(log);
-                        infoTA.setScrollTop(Double.MAX_VALUE);
+                        tilLogger("Hoyre rotasjon på: " +  toppRot.getVerdi());
                         toppRot = roterTilHoyre(toppRot);
                     } else {
-                        log = (String.format("%sHøyre rotasjon på: %s%n", log, toppRot.getVerdi()));
-                        infoTA.setText(log);
-                        infoTA.setScrollTop(Double.MAX_VALUE);
+                        tilLogger("Dobbel høyre rotasjon på: " +  toppRot.getVerdi());
                         toppRot = dobbelRoterTilHoyre(toppRot);
-
                     }
                 }
             }
         }
-
-        int height = maksHoydeMellomVenstreOgHoyre(hoyde(toppRot.getVenstre()), hoyde(toppRot.getHoyre()));
+        int height = hoyesteHoydeMellomVenstreOgHoyre(hoyde(toppRot.getVenstre()), hoyde(toppRot.getHoyre()));
         toppRot.setHoyde(height + 1);
         return toppRot;
     }
@@ -103,8 +82,8 @@ public class AVLTree<T extends Comparable<T>> {
         Node<T> temp = origin.getHoyre();
         origin.setHoyre(temp.getVenstre());
         temp.setVenstre(origin);
-        origin.setHoyde(maksHoydeMellomVenstreOgHoyre(hoyde(origin.getVenstre()), hoyde(origin.getHoyre())) + 1);
-        temp.setHoyde(maksHoydeMellomVenstreOgHoyre(hoyde(temp.getHoyre()), hoyde(origin)) + 1);
+        origin.setHoyde(hoyesteHoydeMellomVenstreOgHoyre(hoyde(origin.getVenstre()), hoyde(origin.getHoyre())) + 1);
+        temp.setHoyde(hoyesteHoydeMellomVenstreOgHoyre(hoyde(temp.getHoyre()), hoyde(origin)) + 1);
         return temp;
     }
 
@@ -113,8 +92,8 @@ public class AVLTree<T extends Comparable<T>> {
         Node<T> temp = origin.getVenstre();
         origin.setVenstre(temp.getHoyre());
         temp.setHoyre(origin);
-        origin.setHoyde(maksHoydeMellomVenstreOgHoyre(hoyde(origin.getVenstre()), hoyde(origin.getHoyre())) + 1);
-        temp.setHoyde(maksHoydeMellomVenstreOgHoyre(hoyde(temp.getVenstre()), hoyde(origin)) + 1);
+        origin.setHoyde(hoyesteHoydeMellomVenstreOgHoyre(hoyde(origin.getVenstre()), hoyde(origin.getHoyre())) + 1);
+        temp.setHoyde(hoyesteHoydeMellomVenstreOgHoyre(hoyde(temp.getVenstre()), hoyde(origin)) + 1);
         return temp;
     }
 
@@ -130,7 +109,7 @@ public class AVLTree<T extends Comparable<T>> {
         return roterTilHoyre(origin);
     }
 
-    private int maksHoydeMellomVenstreOgHoyre(int a, int b) {
+    private int hoyesteHoydeMellomVenstreOgHoyre(int a, int b) {
         if (a > b)
             return a;
         else
