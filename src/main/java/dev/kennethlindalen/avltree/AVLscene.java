@@ -27,7 +27,6 @@ import java.util.Set;
  * @author Lars Stian Fagerlid (163357)
  */
 
-// TODO: impl søk i GUI
 public class AVLscene extends Scene {
     private TextField input;
     private TextField finnNodeTF;
