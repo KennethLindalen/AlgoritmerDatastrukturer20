@@ -1,12 +1,24 @@
-# Obligatorisk oppgave 1
+# Obligatorisk oppgave 2
 
-Denne oppgåva dreier seg om å teikne tre. Dette treet har ei stamme nederst, ut frå denne går to greiner, ein skrått venstre, ein skrått høgre. Ut frå kvar grein går så to nye mindre greiner, til greinene er så små at vi stoppar. Stamme og greiner teiknast berre som tynn strek. Det kan t.d. sjå slik ut:
+Andre og siste obligatoriske oppgåve i 6124 Algoritmer og datastrukturar hausten 2020.
 
-![alt text](https://home.usn.no/lonnesta/kurs/kurs6124/Oblig/tree.jpg "Logo Title Text 1")
+Det skal utviklast ein applikasjon der brukaren kan legge inn tal i eit AVL-tre. For kvar endring skal treet teiknast i applikasjonen.
 
+Det er altså to hovuddelar. Den eine er å implementere ei generisk AVL-klasse som held treet balansert under innsetting. Dette er avskrift av AVLTree i læreboka. Den andre delen er ein grafisk applikasjon som opprettar ein instans av AVL-klassa, som gjer det mogeleg å legge inn verdiar i treet, og som heile tida teiknar ut treet. Du finn mykje kode i kapittel 25 som kan nyttast.
 
-Lag ein applikasjon med grafisk grensesnitt slik at brukar interaktivt kan styre storleik på treet, vinkel på grein ut frå stamma (forrige grein), storleiken av stamma i høve til resten av treet, m.m. Du skal nytte rekursjon til å teikne treet, og brukar skal kunne styre antal nivå i rekursjonen. Stopp også rekursjonen utfrå storleik, t.d. når greinane er mindre enn to pikslar lange.
+Du skal fylgje MVC-prinsippet (Model-View-Controller) på det viset at AVLTree og AVLTreeNode skal ikkje drive operasjonar mot det grafiske grensesnittet. Dersom du treng å "opne" klassene noko for å få teikna ut så kan du det, men pass på at du ikkje opnar meire enn naudsynt.
 
-I staden for at treet er perfekt, alle greiner sit på plass presis der ein forventar dei (som i figuren over), skal du legge inn litt tilfeldig avvik (random) i vinklar, lengder, og om ei grein i det heile er der:
-if (random...) grein( ....);
-Dei nederste, største greinene bør ganske sikkert vera på plass, dei minste ytterst kan gjerne mangle. La brukar interaktivt styre ein eller fleire parametre som bestemmer grad av random, frå at alt er på rett plass, til at det er stor variasjon.
+Applikasjonen skal ha stor teikneflate der treet teiknast ut, verdien i noden teiknast inni ein sirkel, sjå figur 25.15 i læreboka. Applikasjonen skal opprette eit tre av Integer, men tre-klassa skal altså vera generisk. Applikasjonen skal ha desse funksjonane:
+
+Søk: Brukar skriv eit tal i eit tekstfelt, programmet rapporterer om det finn talet i treet.
+Innsetting: Brukar skriv eit tal i eit tekstfelt, talet leggast inn i treet, og teikninga oppdaterast. Rapporter om vellykka eller feil - duplikat.
+Sletting: Brukar skriv eit tal i eit tekstfelt, talet slettast frå treet, og teikninga oppdaterast. Rapporter om vellykka eller feil - finn ikkje verdien.
+For rask testing lag ein knapp som legg inn 10 tilfeldige verdiar i treet. Teikninga oppdaterast.
+Treet skal også kunne aksesserast etter nummerering. Brukar skriv inn eit tal, t.d. 5, og programmet finn det 5. minste talet og rapporterer dette. Det skal skje med O(logN)-algoritme (sjå oppgåve 26.5 side 1028-29.) Kvar node må altså ha ein "size" og denne må vedlikehaldast ved innsetting og sletting.
+Prosjektet leverast i Canvas, frist er mandag 2. november kl 23.59. Lever kode, og minimum to skjermdump av applikasjonen som viser ulike tre. Pakk dette saman med zip'ing.
+
+Leverast gruppevis, ein til fire på kvar gruppe. Eg tilrår å jobbe i grupper! Før på namn i kommentar på dei som er på gruppa, og etabler gruppe i Canvas i samsvar med dette. Det er heilt i orden å diskutere på tvers av gruppene, men ikkje å utveksle kode.
+
+Legg inn Javadoc-kommentarar, nytt gode variabelnavn, og nytt innrykk så det vert lesbar kode.
+
+Dette er ei oppgåve med rettleiing. Står gruppa fast, så ta kontakt.a på plass, dei minste ytterst kan gjerne mangle. La brukar interaktivt styre ein eller fleire parametre som bestemmer grad av random, frå at alt er på rett plass, til at det er stor variasjon.
