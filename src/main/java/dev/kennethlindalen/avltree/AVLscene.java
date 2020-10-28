@@ -101,18 +101,16 @@ public class AVLscene extends Scene {
                 infoTA.setText(log);
                 infoTA.setScrollTop(Double.MAX_VALUE);
             } else if (Integer.parseInt(finnNodeTF.getText()) > nodeListe.size() - 1) {
-                log = (String.format("%sIkke gylding index, ikke mange nok noder%n", log));
-                infoTA.setText(log);
-                infoTA.setScrollTop(Double.MAX_VALUE);
-                try {
-                    throw new IndexOutOfBoundsException();
-                } catch (Exception ignored) {
-                }
-            } else {
                 printInorder(avlTre.getRotNode());
-                log = (String.format("%sLaveste node på %d posisjon er: %d%n", log, Integer.parseInt(finnNodeTF.getText()), nodeListe.get(Integer.parseInt(finnNodeTF.getText()) - 1)));
-                infoTA.setText(log);
-                infoTA.setScrollTop(Double.MAX_VALUE);
+                if (Integer.parseInt(finnNodeTF.getText()) < nodeListe.size() - 1) {
+                    log = (String.format("%sLaveste node på %d posisjon er: %d%n", log, Integer.parseInt(finnNodeTF.getText()), nodeListe.get(Integer.parseInt(finnNodeTF.getText()) - 1)));
+                    infoTA.setText(log);
+                    infoTA.setScrollTop(Double.MAX_VALUE);
+                }else {
+                    log = (String.format("%sIkke gylding index, ikke mange nok noder%n", log));
+                    infoTA.setText(log);
+                    infoTA.setScrollTop(Double.MAX_VALUE);
+                }
             }
         });
 
