@@ -91,7 +91,7 @@ public class AVLscene extends Scene {
         });
 
         settInnKnapp.setOnAction(e -> {
-            insert();
+            settInn();
         });
 
         finnNteLavesteNode.setOnAction(e -> {
@@ -124,7 +124,13 @@ public class AVLscene extends Scene {
         });
 
         slettKnapp.setOnAction(e -> {
-            delete();
+            if (input.getText().equals("")){
+                log = (String.format("%sSøkefeltet er tomt%n", log));
+                infoTA.setText(log);
+                infoTA.setScrollTop(Double.MAX_VALUE);
+            }else {
+                slett();
+            }
         });
     }
 
@@ -185,11 +191,12 @@ public class AVLscene extends Scene {
         for (int x : set) {
             avlTre.settInnElement(x);
         }
+        infoTA.setScrollTop(Double.MAX_VALUE);
         visAVLTre();
 
     }
 
-    private void insert() {
+    private void settInn() {
         try {
             int toInsert = Integer.parseInt(input.getText());
             avlTre.settInnElement(toInsert);
@@ -202,7 +209,7 @@ public class AVLscene extends Scene {
         input.setText("");
     }
 
-    private void delete() {
+    private void slett() {
         if (input.getText().equals(avlTre.getRotNode().getVerdi())) {
             avlTre.slettNode(Integer.parseInt(input.getText()));
             log = (String.format("%sSlettet node: %s%n", log, input.getText()));
