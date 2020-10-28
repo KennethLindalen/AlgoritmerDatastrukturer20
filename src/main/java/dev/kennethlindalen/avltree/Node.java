@@ -1,5 +1,10 @@
 package dev.kennethlindalen.avltree;
-
+/**
+ * Klasse for oppretting av noder i AVL treet.
+ *
+ * @author Kenneth Lindalen (161940)
+ * @author Lars Stian Fagerlid (163357)
+ */
 public class Node<T> {
     private T verdi;
     private Node<T> venstre;

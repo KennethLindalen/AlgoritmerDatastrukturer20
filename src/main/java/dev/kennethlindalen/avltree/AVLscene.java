@@ -110,7 +110,7 @@ public class AVLscene extends Scene {
             if (finnNodeTF.getText().equals("")) {
                 tilLogger("Søkefeltet er tomt");
             } else if (Integer.parseInt(finnNodeTF.getText()) > nodeListe.size() - 1) {
-                printInorder(avlTre.getRotNode());
+                opprettInorderListe(avlTre.getRotNode());
                 if (Integer.parseInt(finnNodeTF.getText()) < nodeListe.size() - 1) {
                     tilLogger("Laveste node på " + Integer.parseInt(finnNodeTF.getText()) + " posisjon er: " + nodeListe.get(Integer.parseInt(finnNodeTF.getText()) - 1));
                 } else {
@@ -162,15 +162,14 @@ public class AVLscene extends Scene {
         avlPane.getChildren().addAll(circle, new Text(x - 7, y + 4, root.getVerdi() + ""));
     }
 
-    private void printInorder(Node node) {
+    private void opprettInorderListe(Node node) {
         if (node == null)
             return;
         // Gå så langt til venstre som det er mulig, kan den ikke mer så legger den verdien i nodeListe
-        printInorder(node.getVenstre());
-        /* then print the data of node */
+        opprettInorderListe(node.getVenstre());
         nodeListe.add(Integer.parseInt(node.getVerdi().toString()));
         // Gjør deretter det samme på høyre noder.
-        printInorder(node.getHoyre());
+        opprettInorderListe(node.getHoyre());
 
     }
 
@@ -200,8 +199,7 @@ public class AVLscene extends Scene {
     // Sett inn ny node(tall) i treet
     private void settInn() {
         try {
-            int skalSettesInn = Integer.parseInt(input.getText());
-            avlTre.settInnElement(skalSettesInn);
+            avlTre.settInnElement(Integer.parseInt(input.getText()));
             visAVLTre();
         } catch (Exception empty) {
             tilLogger("Kan ikke sette inn tomt element.");

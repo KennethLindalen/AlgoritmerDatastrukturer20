@@ -1,7 +1,12 @@
 package dev.kennethlindalen.avltree;
 
 import static dev.kennethlindalen.avltree.AVLscene.*;
-
+/**
+ * Metoder for å opprette AVLtreet
+ *
+ * @author Kenneth Lindalen (161940)
+ * @author Lars Stian Fagerlid (163357)
+ */
 public class AVLTree<T extends Comparable<T>> {
     private Node<T> rotNode;
 
@@ -40,7 +45,7 @@ public class AVLTree<T extends Comparable<T>> {
         return false;
     }
 
-    //insert a new element to the tree
+    //Sett inn en ny node(tall) i treet
     private Node<T> settInnElement(T element, Node<T> toppRot) {
         if (toppRot == null) {
             toppRot = new Node<T>(element);
