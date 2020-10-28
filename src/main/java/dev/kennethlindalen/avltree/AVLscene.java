@@ -4,8 +4,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -19,52 +17,49 @@ import java.util.LinkedHashSet;
 import java.util.Random;
 import java.util.Set;
 
+
+/**
+ * Oppretter gui og setter opp for hva som skal skje ut i fra hvilke handlinger som er gjort i GUI
+ *
+ * @author Kenneth Lindalen (161940)
+ * @author Lars Stian Fagerlid (163357)
+ */
 public class AVLscene extends Scene {
-    private Main main;
     private TextField input;
     private TextField finnNodeTF;
-    private AVLTree<Integer> arbol = new AVLTree<>();
+    private AVLTree<Integer> avlTre = new AVLTree<>();
     private double vGap = 60;
-    private double radius = 20;
-    private Pane avl;
+    private Pane avlPane;
     public static TextArea infoTA = new TextArea();
     public static String log = "";
     private ArrayList<Integer> nodeListe = new ArrayList<>();
 
+    // Opprettelsen av GUI
     public AVLscene(Main main) {
         super(new VBox());
-        this.main = main;
 
-        /***************
-         * GUI Elements *
-         ****************/
-        VBox mainContent = new VBox(20);
+        VBox vindu = new VBox(0);
         FlowPane bottom = new FlowPane();
 
-        avl = new Pane();
+        avlPane = new Pane();
         input = new TextField();
         finnNodeTF = new TextField();
 
+
+        // Elementer i GUI
         Label lblinput = new Label("Element:");
         Label finnNode = new Label("Nte laveste node å finne:");
         Button finnNteLavesteNode = new Button("Finn den nte laveste node:");
-        Button insert = new Button("Sett inn node");
-        Button delete = new Button("Slett node");
-        Button randomTree = new Button("Generer tilfeldig tre");
-        Button clear = new Button("Slett alle noder");
+        Button settInnKnapp = new Button("Sett inn node");
+        Button slettKnapp = new Button("Slett node");
+        Button tilfeldigTreKnapp = new Button("Generer tilfeldig tre");
+        Button slettAlleNoderKnapp = new Button("Slett alle noder");
 
-        input.setOnKeyPressed((KeyEvent keyEvent) -> {
-            if (keyEvent.getCode().equals(KeyCode.ENTER)) {
-                insert();
-            }
-        });
+        // Stilsetting av elementer
 
-        /***********
-         *  Styles  *
-         ************/
-        avl.setMinSize(800, 450);
-        avl.setPadding(new Insets(20, 20, 20, 20));
-        avl.setStyle("-fx-padding: 30;" +
+        avlPane.setMinSize(800, 450);
+        avlPane.setPadding(new Insets(20, 20, 20, 20));
+        avlPane.setStyle("-fx-padding: 30;" +
                 "-fx-background-color: white;");
 
         infoTA.setEditable(false);
@@ -74,142 +69,152 @@ public class AVLscene extends Scene {
 
         bottom.setPadding(new Insets(10, 10, 10, 15));
 
-        bottom.getChildren().addAll(lblinput, input,finnNode, finnNodeTF, finnNteLavesteNode, insert, delete, clear, randomTree, infoTA);
-        mainContent.getChildren().addAll(avl, bottom);
+        bottom.getChildren().addAll(lblinput, input, finnNode, finnNodeTF, finnNteLavesteNode, settInnKnapp, slettKnapp, slettAlleNoderKnapp, tilfeldigTreKnapp, infoTA);
+        vindu.getChildren().addAll(avlPane, bottom);
 
 
-        super.setRoot(mainContent);
+        super.setRoot(vindu);
 
-        randomTree.setOnAction(e -> {
-
-            randomTree();
+        tilfeldigTreKnapp.setOnAction(e -> {
+            tilfeldigTre();
             log = (String.format("%sGenerert et tilfeldig tre%n", log));
             infoTA.setText(log);
             infoTA.setScrollTop(Double.MAX_VALUE);
         });
-        clear.setOnAction(e -> {
-            avl.getChildren().clear();
-            arbol.setToppRot(null);
+
+        slettAlleNoderKnapp.setOnAction(e -> {
+            avlPane.getChildren().clear();
+            avlTre.setRotNode(null);
             log = (String.format("%sSlettet alle noder%n", log));
             infoTA.setText(log);
             infoTA.setScrollTop(Double.MAX_VALUE);
         });
-        insert.setOnAction(e -> {
+
+        settInnKnapp.setOnAction(e -> {
             insert();
         });
+
         finnNteLavesteNode.setOnAction(e -> {
-            if(Integer.parseInt(finnNodeTF.getText()) > nodeListe.size() - 1){
-                nodeListe.clear();
-                printInorder(arbol.getToppRot());
-                log = (String.format("%sLaveste node på %d posisjon er: %d%n", log,Integer.parseInt(finnNodeTF.getText()),nodeListe.get(Integer.parseInt(finnNodeTF.getText())-1)));
+            nodeListe.clear();
+            if (finnNodeTF.getText().equals("")){
+                log = (String.format("%sSøkefeltet er tomt%n", log));
                 infoTA.setText(log);
                 infoTA.setScrollTop(Double.MAX_VALUE);
-            }else{
+            } else if (Integer.parseInt(finnNodeTF.getText()) > nodeListe.size() - 1) {
                 log = (String.format("%sIkke gylding index, ikke mange nok noder%n", log));
                 infoTA.setText(log);
                 infoTA.setScrollTop(Double.MAX_VALUE);
+                try {
+                    throw new IndexOutOfBoundsException();
+                } catch (Exception ignored) {
+                }
+            } else {
+                printInorder(avlTre.getRotNode());
+                log = (String.format("%sLaveste node på %d posisjon er: %d%n", log, Integer.parseInt(finnNodeTF.getText()), nodeListe.get(Integer.parseInt(finnNodeTF.getText()) - 1)));
+                infoTA.setText(log);
+                infoTA.setScrollTop(Double.MAX_VALUE);
             }
         });
-        randomTree.setOnAction(e -> {
-            randomTree();
+
+        tilfeldigTreKnapp.setOnAction(e -> {
+            tilfeldigTre();
+            log = (String.format("%sGenerert et tilfeldig tre%n", log));
+            infoTA.setText(log);
+            infoTA.setScrollTop(Double.MAX_VALUE);
         });
-        delete.setOnAction(e -> {
+
+        slettKnapp.setOnAction(e -> {
             delete();
         });
-
     }
 
-    public void displayAVLTree() {
-        avl.getChildren().clear(); // Clear the pane
-        if (arbol.getToppRot() != null) {
-            // Display tree recursively
-            displayAVLTree(arbol.getToppRot(), avl.getWidth() / 2, vGap, avl.getWidth() / 4);
+    public void visAVLTre() {
+        avlPane.getChildren().clear(); // Sletter alt som allerede er vist slik at ikke mange iterasjoner ligger oppå hverandre
+        if (avlTre.getRotNode() != null) {
+            // Gå gjennom treet og vis det ut i fra rekursjon
+            visAVLTre(avlTre.getRotNode(), avlPane.getWidth() / 2, vGap, avlPane.getWidth() / 4);
         }
     }
 
-    private void displayAVLTree(Node root, double x, double y, double hGap) {
-        if (root.getLeft() != null) {
-            // Draw a line to the left node
-            avl.getChildren().add(new Line(x - hGap, y + vGap, x, y));
-            // Draw the left subtree recursively
-            displayAVLTree(root.getLeft(), x - hGap, y + vGap, hGap / 2);
+    private void visAVLTre(Node root, double x, double y, double hGap) {
+        if (root.getVenstre() != null) {
+            // Tegner linje til venstre node
+            avlPane.getChildren().add(new Line(x - hGap, y + vGap, x, y));
+            // Tegner venstre subtreet
+            visAVLTre(root.getVenstre(), x - hGap, y + vGap, hGap / 2);
         }
 
-        if (root.getRight() != null) {
-            // Draw a line to the right node
-            avl.getChildren().add(new Line(x + hGap, y + vGap, x, y));
-            // Draw the right subtree recursively
-            displayAVLTree(root.getRight(), x + hGap, y + vGap, hGap / 2);
+        if (root.getHoyre() != null) {
+            // Tegner linje til høyre node
+            avlPane.getChildren().add(new Line(x + hGap, y + vGap, x, y));
+            // Tegner høyre subtreet
+            visAVLTre(root.getHoyre(), x + hGap, y + vGap, hGap / 2);
         }
-        // Display a node
-        Circle circle = new Circle(x, y, radius);
+        // Opprettelsen av sirkelene for nodene
+        Circle circle = new Circle(x, y, 25);
         circle.setId("circle");
         circle.setStroke(Color.GRAY);
         circle.setStrokeWidth(1);
-        circle.setFill(Color.rgb(89, 217, 149));
-        avl.getChildren().addAll(circle, new Text(x - 7, y + 4, root.getElement() + ""));
+        circle.setFill(Color.rgb(89, 162, 217));
+        avlPane.getChildren().addAll(circle, new Text(x - 7, y + 4, root.getVerdi() + ""));
     }
+
     public void printInorder(Node node) {
         if (node == null)
             return;
-        /* first recur on left child */
-        printInorder(node.getLeft());
+        // Gå så langt til venstre som det er mulig, kan den ikke mer så legger den verdien i nodeListe
+        printInorder(node.getVenstre());
         /* then print the data of node */
-        nodeListe.add(Integer.parseInt(node.getElement().toString()));
-        /* now recur on right child */
-        printInorder(node.getRight());
+        nodeListe.add(Integer.parseInt(node.getVerdi().toString()));
+        // Gjør deretter det samme på høyre noder.
+        printInorder(node.getHoyre());
 
     }
 
-    private void randomTree(){
-        avl.getChildren().clear();
-        arbol.setToppRot(null);
-        Random randNum = new Random();
-        //random array size from 3 to 15
-        int setSize = (randNum.nextInt(15)+3);
-        //Create a HashSet to get only unique elements
+    private void tilfeldigTre() {
+        avlPane.getChildren().clear();
+        avlTre.setRotNode(null);
+        Random rnd = new Random();
+        //Tilfeldig antall størrelse på LinkedHashSet mellom 3 og 20
+        int setSize = (rnd.nextInt(20) + 3);
+        //Genererer via HashSet for å bare få unike nummer
         Set<Integer> set = new LinkedHashSet<Integer>();
         while (set.size() < setSize) {
-            set.add(randNum.nextInt(100)+3);
+            set.add(rnd.nextInt(100) + 3);
         }
-        try{
-            for(int x: set){
-                arbol.settInnElement(x);
-            }
-        } catch(DuplicateException de) {
+        for (int x : set) {
+            avlTre.settInnElement(x);
         }
-        displayAVLTree();
+        visAVLTre();
+
     }
 
-
-    private void insert(){
-        try{
+    private void insert() {
+        try {
             int toInsert = Integer.parseInt(input.getText());
-            try{
-                arbol.settInnElement(toInsert);
-                displayAVLTree();
-            }catch(DuplicateException de){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Duplicate");
-                alert.setHeaderText(de.getMessage());
-                alert.showAndWait();
-            }
-        }catch(Exception empty){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Empty field");
-            alert.setHeaderText("Please introduce an element");
-            alert.showAndWait();
+            avlTre.settInnElement(toInsert);
+            visAVLTre();
+        } catch (Exception empty) {
+            log = (String.format("%sKan ikke sette inn tomt element%n", log));
+            infoTA.setText(log);
+            infoTA.setScrollTop(Double.MAX_VALUE);
         }
         input.setText("");
     }
 
-    private void delete(){
-        if(input.getText().equals(arbol.getToppRot().getElement())){
-            arbol.slettNode(Integer.parseInt(input.getText()));
+    private void delete() {
+        if (input.getText().equals(avlTre.getRotNode().getVerdi())) {
+            avlTre.slettNode(Integer.parseInt(input.getText()));
+            log = (String.format("%sSlettet node: %s%n", log, input.getText()));
+            infoTA.setText(log);
+            infoTA.setScrollTop(Double.MAX_VALUE);
         } else {
-            arbol.slettNode2(Integer.parseInt(input.getText()));
+            avlTre.slettNode2(Integer.parseInt(input.getText()));
+            log = (String.format("%sSlettet node: %s%n", log, input.getText()));
+            infoTA.setText(log);
+            infoTA.setScrollTop(Double.MAX_VALUE);
         }
-        displayAVLTree();
+        visAVLTre();
         input.setText("");
     }
 
