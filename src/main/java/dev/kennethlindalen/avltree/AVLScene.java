@@ -12,22 +12,20 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 
 /**
  * Oppretter gui og setter opp for hva som skal skje ut i fra hvilke handlinger som er gjort i GUI
  *
  * @author Kenneth Lindalen (161940)
+ * @author Lars Stian Fagerlid (163357)
  */
 
-public class AVLscene extends Scene {
+public class AVLScene extends Scene {
     private TextField input;
     private TextField finnNodeTF;
-    private AVLTree<Integer> avlTre = new AVLTree<>();
+    private AVLTre<Integer> avlTre = new AVLTre<>();
     private double vGap = 60;
     private Pane avlPane;
     public static TextArea infoTA = new TextArea();
@@ -35,7 +33,7 @@ public class AVLscene extends Scene {
     private ArrayList<Integer> nodeListe = new ArrayList<>();
 
     // Opprettelsen av GUI
-    public AVLscene(Main main) {
+    public AVLScene(Main main) {
         super(new VBox());
 
         VBox vindu = new VBox(0);
@@ -55,6 +53,9 @@ public class AVLscene extends Scene {
         Button sokKnapp = new Button("Søk node");
         Button tilfeldigTreKnapp = new Button("Generer tilfeldig tre");
         Button slettAlleNoderKnapp = new Button("Slett alle noder");
+        Button printInOrderKnapp = new Button("Logg Inorder");
+        Button printPreOrderKnapp = new Button("Logg Preorder");
+        Button printPostOrderKnapp = new Button("Logg Postorder");
 
         // Stilsetting av elementer
 
@@ -63,6 +64,7 @@ public class AVLscene extends Scene {
         avlPane.setStyle("-fx-background-color: white;");
 
         infoTA.setEditable(false);
+        infoTA.setPrefWidth(750);
 
         bunn.setHgap(15);
         bunn.setVgap(15);
@@ -72,7 +74,7 @@ public class AVLscene extends Scene {
 
         bunn.getChildren().addAll(generellInputLabel, input, finnNode, finnNodeTF,
                 finnNteLavesteNode, settInnKnapp, slettKnapp, slettAlleNoderKnapp,
-                sokKnapp, tilfeldigTreKnapp, infoTA);
+                sokKnapp, tilfeldigTreKnapp, infoTA,printPreOrderKnapp, printInOrderKnapp, printPostOrderKnapp);
 
         vindu.getChildren().addAll(avlPane, bunn);
 
@@ -123,10 +125,23 @@ public class AVLscene extends Scene {
                 tilLogger("Søkefeltet er tomt.");
             } else {
                 slett();
-                tilLogger(input.getText() + " har blitt slettet.");
             }
         });
-
+        printInOrderKnapp.setOnAction(e -> {
+            nodeListe.clear();
+            opprettInorderListe(avlTre.getRotNode());
+            tilLogger("InOrder: " + nodeListe);
+        });
+        printPreOrderKnapp.setOnAction(e -> {
+            nodeListe.clear();
+            preOrder(avlTre.getRotNode());
+            tilLogger("PreOrder: " + nodeListe);
+        });
+        printPostOrderKnapp.setOnAction(e -> {
+            nodeListe.clear();
+            postOrder(avlTre.getRotNode());
+            tilLogger("PostOrder: " + nodeListe);
+        });
     }
 
     public void visAVLTre() {
@@ -218,5 +233,22 @@ public class AVLscene extends Scene {
         visAVLTre();
         input.setText("");
     }
+
+    private void preOrder(Node node) {
+        if (node == null) {
+            return;
+        }
+        nodeListe.add(Integer.parseInt(node.getVerdi().toString()));
+        preOrder(node.getVenstre());
+        preOrder(node.getHoyre());
+    }
+    public void postOrder(Node node) {
+        if(node !=  null) {
+            postOrder(node.getVenstre());
+            postOrder(node.getHoyre());
+            nodeListe.add(Integer.parseInt(node.getVerdi().toString()));
+        }
+    }
+
 
 }

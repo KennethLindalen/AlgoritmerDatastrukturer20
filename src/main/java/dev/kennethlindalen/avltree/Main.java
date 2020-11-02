@@ -7,16 +7,17 @@ import javafx.stage.Stage;
  * Oppretter hoved vinduet
  *
  * @author Kenneth Lindalen (161940)
+ * @author Lars Stian Fagerlid (163357)
  */
 public class Main extends Application {
     private Stage mainStage;
-    private Scene AVLscene = new AVLscene(this);
+    private Scene AVLscene = new AVLScene(this);
 
     public void start(Stage stage) throws Exception {
         mainStage = stage;
         stage.setTitle("Obligatorisk oppgave 2: Algoritmer og Datastrukturer");
         stage.setWidth(800);
-        stage.setHeight(800);
+        stage.setHeight(820);
 
         stage.show();
         stage.setScene(AVLscene);

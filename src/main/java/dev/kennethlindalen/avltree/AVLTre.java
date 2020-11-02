@@ -1,12 +1,14 @@
 package dev.kennethlindalen.avltree;
 
-import static dev.kennethlindalen.avltree.AVLscene.*;
+import static dev.kennethlindalen.avltree.AVLScene.*;
 /**
  * Metoder for å opprette AVLtreet
  *
  * @author Kenneth Lindalen (161940)
+ * @author Lars Stian Fagerlid (163357)
  */
-public class AVLTree<T extends Comparable<T>> {
+
+public class AVLTre<T extends Comparable<T>> {
     private Node<T> rotNode;
 
     public Node<T> getRotNode() {
