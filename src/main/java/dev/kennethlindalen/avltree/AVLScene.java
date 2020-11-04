@@ -19,7 +19,7 @@ import java.util.*;
  * Oppretter gui og setter opp for hva som skal skje ut i fra hvilke handlinger som er gjort i GUI
  *
  * @author Kenneth Lindalen (161940)
- * @author Lars Stian Fagerlid (163357)
+ *
  */
 
 public class AVLScene extends Scene {
@@ -56,6 +56,7 @@ public class AVLScene extends Scene {
         Button printInOrderKnapp = new Button("Logg Inorder");
         Button printPreOrderKnapp = new Button("Logg Preorder");
         Button printPostOrderKnapp = new Button("Logg Postorder");
+        Button printLevelOrderKnapp = new Button("Logg Levelorder");
 
         // Stilsetting av elementer
 
@@ -74,7 +75,7 @@ public class AVLScene extends Scene {
 
         bunn.getChildren().addAll(generellInputLabel, input, finnNode, finnNodeTF,
                 finnNteLavesteNode, settInnKnapp, slettKnapp, slettAlleNoderKnapp,
-                sokKnapp, tilfeldigTreKnapp, infoTA,printPreOrderKnapp, printInOrderKnapp, printPostOrderKnapp);
+                sokKnapp, tilfeldigTreKnapp, infoTA, printPreOrderKnapp, printInOrderKnapp, printPostOrderKnapp, printLevelOrderKnapp);
 
         vindu.getChildren().addAll(avlPane, bunn);
 
@@ -130,17 +131,25 @@ public class AVLScene extends Scene {
         printInOrderKnapp.setOnAction(e -> {
             nodeListe.clear();
             opprettInorderListe(avlTre.getRotNode());
-            tilLogger("InOrder: " + nodeListe);
+            tilLogger("InOrder: " + listPrintPrettier(nodeListe));
         });
+
         printPreOrderKnapp.setOnAction(e -> {
             nodeListe.clear();
             preOrder(avlTre.getRotNode());
-            tilLogger("PreOrder: " + nodeListe);
+            tilLogger("PreOrder: " + listPrintPrettier(nodeListe));
         });
+
         printPostOrderKnapp.setOnAction(e -> {
             nodeListe.clear();
             postOrder(avlTre.getRotNode());
-            tilLogger("PostOrder: " + nodeListe);
+            tilLogger("PostOrder: " + listPrintPrettier(nodeListe));
+        });
+
+        printLevelOrderKnapp.setOnAction(e -> {
+            nodeListe.clear();
+            levelOrderTraversal(avlTre.getRotNode());
+            tilLogger("LevelOrder: " + listPrintPrettier(nodeListe));
         });
     }
 
@@ -242,13 +251,31 @@ public class AVLScene extends Scene {
         preOrder(node.getVenstre());
         preOrder(node.getHoyre());
     }
+
     public void postOrder(Node node) {
-        if(node !=  null) {
+        if (node != null) {
             postOrder(node.getVenstre());
             postOrder(node.getHoyre());
             nodeListe.add(Integer.parseInt(node.getVerdi().toString()));
         }
     }
 
+    public void levelOrderTraversal(Node startNode) {
+        Queue<Node> queue = new LinkedList<Node>();
+        queue.add(startNode);
+        while (!queue.isEmpty()) {
+            Node tempNode = queue.poll();
+            nodeListe.add(Integer.parseInt(tempNode.getVerdi().toString()));
+            if (tempNode.getVenstre() != null)
+                queue.add(tempNode.getVenstre());
+            if (tempNode.getHoyre() != null)
+                queue.add(tempNode.getHoyre());
+        }
+    }
+
+    public String listPrintPrettier(ArrayList<Integer> lst){
+        String account = Arrays.toString(lst.toArray());
+        return account.substring(1,account.length()-1);
+    }
 
 }

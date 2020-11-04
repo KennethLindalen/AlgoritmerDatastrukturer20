@@ -7,7 +7,7 @@ import javafx.stage.Stage;
  * Oppretter hoved vinduet
  *
  * @author Kenneth Lindalen (161940)
- * @author Lars Stian Fagerlid (163357)
+ *
  */
 public class Main extends Application {
     private Stage mainStage;
